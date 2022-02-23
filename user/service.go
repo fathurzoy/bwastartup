@@ -6,7 +6,7 @@ type Service interface {
 	RegisterUser(input RegisterUserInput) (User, error)
 }
 
-type service struct {  
+type service struct {
 	repository Repository
 }
 
@@ -24,7 +24,7 @@ func (s *service) RegisterUser(input RegisterUserInput) (User, error) {
 	if err != nil {
 		return user, err
 	}
-	 
+
 	user.PasswordHash = string(passwordHash)
 	user.Role = "user"
 
