@@ -34,6 +34,15 @@ func (s *service) RegisterUser(input RegisterUserInput) (User, error) {
 	user.PasswordHash = string(passwordHash)
 	user.Role = "user"
 
+	userEmail, err := s.repository.FindByEmail(input.Email)
+	if err != nil{
+		return userEmail, err
+	}
+
+	if userEmail.ID != 0{
+		return userEmail, errors.New("Email has been registered")
+	}
+
 	newUser, err := s.repository.Save(user)
 	if err != nil {
 		return newUser, err

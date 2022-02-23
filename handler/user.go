@@ -36,7 +36,8 @@ func (h *userHandler) RegisterUser(c *gin.Context	){
 	newUser, err := h.userService.RegisterUser(input)
 
 	if err != nil {
-		response := helper.APIResponse("Register account failed", http.StatusBadRequest, "error", nil)
+		errorMessage := gin.H{"errors": err.Error()}
+		response := helper.APIResponse("Register account failed", http.StatusBadRequest, "error", errorMessage)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
