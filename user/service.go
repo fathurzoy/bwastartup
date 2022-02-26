@@ -11,6 +11,7 @@ type Service interface {
 	Login(input LoginInput) (User, error)
 	IsEmailAvaiable(input CheckEmailInput) (bool, error)
 	SaveAvatar(ID int, fileLocation string) (User, error)
+	GetUserByID(ID int) (User, error)
 }
 
 type service struct {
@@ -91,22 +92,36 @@ func (s *service) IsEmailAvaiable(input CheckEmailInput) (bool, error){
 	return false, nil
 }
 
-	func (s *service) SaveAvatar(ID int, fileLocation string) (User, error){
-		// dapatkan user berdasarkan ID
-		// update attribute avatar file name
-		// simpan perubahan avatar file name
+func (s *service) SaveAvatar(ID int, fileLocation string) (User, error){
+	// dapatkan user berdasarkan ID
+	// update attribute avatar file name
+	// simpan perubahan avatar file name
 
-		user, err := s.repository.FindById(ID)
-		if err != nil{
-			return user, err
-		}
-
-		user.AvatarFileName = fileLocation
-
-		updatedUser, err := s.repository.Update(user)
-		if err != nil{
-			return updatedUser, err
-		}
-
-		return updatedUser, nil
+	user, err := s.repository.FindByID(ID)
+	if err != nil{
+		return user, err
 	}
+
+	user.AvatarFileName = fileLocation
+
+	updatedUser, err := s.repository.Update(user)
+	if err != nil{
+		return updatedUser, err
+	}
+
+	return updatedUser, nil
+}
+
+
+func (s *service) GetUserByID(ID int) (User	, error){
+	user, err := s.repository.FindByID(ID)
+	if err != nil {
+		return user, err
+	} 
+
+	if user.ID == 0{
+		return user, errors.New("No user found on with that ID")
+	}
+
+	return user, nil	
+}
