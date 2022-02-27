@@ -161,7 +161,7 @@ func (h *userHandler) UploadAvatar (c *gin.Context){
 	}
 
 	currentUser := c.MustGet("currentUser").(user.User)
-	userID := currentUser.ID
+	userID := currentUser.ID	
 
 	// images/namefile.png
 	// images/1-namafile.png
