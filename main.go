@@ -6,7 +6,6 @@ import (
 	"bwastartup/handler"
 	"bwastartup/helper"
 	"bwastartup/user"
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -57,9 +56,10 @@ func main() {
 
 	// fmt.Println(authService.GenerateToken(1001)) 
 
-	campaigns, _ := campaignService.FindCampaigns(0)
-	fmt.Println(len(campaigns))
+	// campaigns, _ := campaignService.GetCampaigns(0)
+	// fmt.Println(len(campaigns))
 	userHandler := handler.NewUserHandler(userService, authService)
+	campaignHandler := handler.NewCampaignHandler(campaignService)
 
 	// tes password
 	// input := user.LoginInput{
@@ -97,6 +97,8 @@ func main() {
 	api.POST("/sessions", userHandler.Login)
 	api.POST("/email_checkers", userHandler.CheckEmailAvailability)
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
+
+	api.GET("/campaigns", campaignHandler.GetCampaigns)
 
 	router.Run()
 
