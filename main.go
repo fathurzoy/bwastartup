@@ -91,6 +91,7 @@ func main() {
 	// userService.SaveAvatar(1, "images/1-profile.png")
 	
 	router := gin.Default()
+	router.Static("/images", "./images")
 	api := router.Group("/api/v1")
 
 	api.POST("/users", userHandler.RegisterUser)
