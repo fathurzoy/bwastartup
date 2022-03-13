@@ -44,6 +44,20 @@ func main() {
 	campaignService := campaign.NewService(campaignRepository)
 	authService := auth.NewService()
 
+	// tes campaign create
+	// input := campaign.CreateCampaignInput{}
+	// input.Name = "Penggalangan Dana Startup"
+	// input.ShortDescription = "short"
+	// input.Description = "longgggg"
+	// input.GoalAmount = 1000000
+	// input.Perks = "hadiah satu, dua, dan tiga"
+	// inputUser, _ := userService.GetUserByID(1)
+	// input.User = inputUser
+	// _, err = campaignService.CreateCampaign(input)
+	// if err != nil {
+	// 	log.Fatal(err.Error())
+	// }
+
 	// token, err := authService.ValidateToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozfQ.k98dBbHioAp-jkA4wMzEXlu3Z0U1F93gJdffoY4Ha4o")
 	// if err != nil {
 	// 	fmt.Println("ERROR")
@@ -101,6 +115,7 @@ func main() {
 
 	api.GET("/campaigns", campaignHandler.GetCampaigns)
 	api.GET("/campaigns/:id", campaignHandler.GetCampaign)
+	api.POST("/campaigns", authMiddleware(authService, userService),campaignHandler.CreateCampaign)
 
 	router.Run()
 
