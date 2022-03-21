@@ -121,8 +121,8 @@ func (h *userHandler) CheckEmailAvailability(c *gin.Context){
 		return
 	}
 
-	IsEmailAvaiable, err := h.userService.IsEmailAvaiable(input)
-	if err != nil{
+	isEmailAvailable, err := h.userService.IsEmailAvailable(input)
+	if err != nil {
 		errorMessage := gin.H{"errors": "Server error"}
 		response := helper.APIResponse("Email checking failed", http.StatusUnprocessableEntity, "error", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, response)
@@ -130,18 +130,19 @@ func (h *userHandler) CheckEmailAvailability(c *gin.Context){
 	}
 
 	data := gin.H{
-		"is_available" : IsEmailAvaiable,
+		"is_available": isEmailAvailable,
 	}
 
-	metaMessage := "Email has been registered" 
+	metaMessage := "Email has been registered"
 
-	if IsEmailAvaiable {
+	if isEmailAvailable {
 		metaMessage = "Email is available"
 	}
 
 	response := helper.APIResponse(metaMessage, http.StatusOK, "success", data)
-		c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusOK, response)
 }
+
 
 func (h *userHandler) UploadAvatar (c *gin.Context){
 	// input dari user

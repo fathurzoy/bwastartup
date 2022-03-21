@@ -9,7 +9,7 @@ import (
 type Service interface {
 	RegisterUser(input RegisterUserInput) (User, error)
 	Login(input LoginInput) (User, error)
-	IsEmailAvaiable(input CheckEmailInput) (bool, error)
+	IsEmailAvailable(input CheckEmailInput) (bool, error)
 	SaveAvatar(ID int, fileLocation string) (User, error)
 	GetUserByID(ID int) (User, error)
 }
@@ -77,15 +77,15 @@ func (s *service) Login(input LoginInput) (User, error){
 	return user, nil
 }
 
-func (s *service) IsEmailAvaiable(input CheckEmailInput) (bool, error){
+func (s *service) IsEmailAvailable(input CheckEmailInput) (bool, error) {
 	email := input.Email
 
 	user, err := s.repository.FindByEmail(email)
-	if err != nil{
+	if err != nil {
 		return false, err
 	}
 
-	if user.ID == 0{
+	if user.ID == 0 {
 		return true, nil
 	}
 

@@ -57,7 +57,7 @@ func main() {
 	// 	Amount: 500000,
 	// 	User: user,
 	// }
-	// transactionService.CreateTranasction(input)
+	// transactionService.CreateTransaction(input)
 
 	// tes campaign create
 	// input := campaign.CreateCampaignInput{}
