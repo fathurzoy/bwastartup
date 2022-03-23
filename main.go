@@ -13,7 +13,6 @@ import (
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -121,7 +120,9 @@ func main() {
 	// userService.SaveAvatar(1, "images/1-profile.png")
 	
 	router := gin.Default()
-	router.Use(cors.Default()) //untuk cors
+	router = gin.New()  
+	router.Use(CORSMiddleware())
+	// router.Use(cors.Default()) //untuk cors
 
 	router.Static("/images", "./images")
 	api := router.Group("/api/v1")
@@ -255,3 +256,21 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 // ambil nilai header Authorization: Bearer token
 // dari header Authorization, kita ambil nilai tokennya saja
 // kita validasi token
+
+
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+			c.Header("Access-Control-Allow-Origin", "*")
+			c.Header("Access-Control-Allow-Credentials", "true")
+			c.Header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+			c.Header("Access-Control-Allow-Methods", "POST,HEAD,PATCH, OPTIONS, GET, PUT")
+
+			if c.Request.Method == "OPTIONS" {
+					c.AbortWithStatus(204)
+					return
+			}
+
+			c.Next()
+	}
+}
