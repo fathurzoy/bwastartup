@@ -19,6 +19,7 @@ func (h *userHandler) Index(c *gin.Context){
 	users, err := h.userService.GetAllUsers()
 	if err != nil{
 		c.HTML(http.StatusInternalServerError, "error.html", nil)
+		return
 	}
 	c.HTML(http.StatusOK, "user_index.html", gin.H{"users": users})
 }
