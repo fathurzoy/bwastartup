@@ -123,7 +123,7 @@ func main() {
 	// tes update filename database
 	// userService.SaveAvatar(1, "images/1-profile.png")
 
-	userWebHandler := webHandler.NewUserHandler()
+	userWebHandler := webHandler.NewUserHandler(userService)
 	
 	router := gin.Default()
 	router = gin.New()  
