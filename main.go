@@ -10,9 +10,13 @@ import (
 	"bwastartup/user"
 	"log"
 	"net/http"
+	"path/filepath"
 	"strings"
 
+	webHandler "bwastartup/web/handler"
+
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -118,13 +122,19 @@ func main() {
 
 	// tes update filename database
 	// userService.SaveAvatar(1, "images/1-profile.png")
+
+	userWebHandler := webHandler.NewUserHandler()
 	
 	router := gin.Default()
 	router = gin.New()  
 	router.Use(CORSMiddleware())
 	// router.Use(cors.Default()) //untuk cors
 
+	router.HTMLRender = loadTemplates("./web/templates")
 	router.Static("/images", "./images")
+	router.Static("/css", "./web/assets/css")
+	router.Static("/js", "./web/assets/js")
+	router.Static("/webfonts", "./web/assets/webfonts")
 	api := router.Group("/api/v1")
 
 	api.POST("/users", userHandler.RegisterUser)
@@ -145,7 +155,9 @@ func main() {
 	api.POST("/transactions", authMiddleware(authService, userService), transactionHandler.CreateTransaction)
 	api.POST("/transactions/notification", transactionHandler.GetNotification)
 
-	router.Run()
+	router.GET("/users", userWebHandler.Index)
+
+	router.Run(":8080")
 
 
 	// --------------
@@ -273,4 +285,28 @@ func CORSMiddleware() gin.HandlerFunc {
 
 			c.Next()
 	}
+}
+
+
+func loadTemplates(templatesDir string) multitemplate.Renderer {
+  r := multitemplate.NewRenderer()
+
+  layouts, err := filepath.Glob(templatesDir + "/layouts/*")
+  if err != nil {
+    panic(err.Error())
+  }
+
+  includes, err := filepath.Glob(templatesDir + "/**/*")
+  if err != nil {
+    panic(err.Error())
+  }
+
+  // Generate our templates map from our layouts/ and includes/ directories
+  for _, include := range includes {
+    layoutCopy := make([]string, len(layouts))
+    copy(layoutCopy, layouts)
+    files := append(layoutCopy, include)
+    r.AddFromFiles(filepath.Base(include), files...)
+  }
+  return r
 }
