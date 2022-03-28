@@ -124,7 +124,7 @@ func main() {
 	// userService.SaveAvatar(1, "images/1-profile.png")
 
 	userWebHandler := webHandler.NewUserHandler(userService)
-	campaignWebHandler := webHandler.NewCampaignHandler(campaignService)
+	campaignWebHandler := webHandler.NewCampaignHandler(campaignService, userService)
 	
 	router := gin.Default()
 	router = gin.New()  
@@ -165,6 +165,7 @@ func main() {
 	router.POST("/users/avatar/:id", userWebHandler.CreateAvatar)
 
 	router.GET("/campaigns", campaignWebHandler.Index)
+	router.GET("/campaigns/new", campaignWebHandler.New)
 
 	router.Run(":8080")
 
