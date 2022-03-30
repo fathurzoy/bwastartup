@@ -128,6 +128,7 @@ func main() {
 	userWebHandler := webHandler.NewUserHandler(userService)
 	campaignWebHandler := webHandler.NewCampaignHandler(campaignService, userService)
 	transactionWebHandler := webHandler.NewTransactionHandler(transactionService)
+	sessionWebHandler := webHandler.NewSessionHandler(userService)
 	
 	router := gin.Default()
 	router = gin.New()  
@@ -179,6 +180,9 @@ func main() {
 	router.POST("/campaigns/update/:id", authAdminMiddleware(), campaignWebHandler.Update)
 	router.GET("/campaigns/show/:id", authAdminMiddleware(), campaignWebHandler.Show)
 	router.GET("/transactions", authAdminMiddleware(), transactionWebHandler.Index)
+
+	router.GET("/login", sessionWebHandler.New)
+	router.POST("/session", sessionWebHandler.Create)
 
 	router.Run(":8080")
 
